@@ -4,6 +4,7 @@ import RootLayout from './components/RootLayout'
 import LoadingSpinner from './components/LoadingSpinner'
 import EnhancedHeader from './components/EnhancedHeader'
 import Hero from './components/Hero'
+import Trial from './components/Trial'
 import AboutUs from './components/AboutUs'
 import TrustBadges from './components/TrustBadges'
 import Programs from './components/Programs'
@@ -38,6 +39,7 @@ function App() {
     <RootLayout>
       <EnhancedHeader />
       <Hero />
+      <Trial />
       <TrustBadges />
       <AboutUs />
       <Programs />
