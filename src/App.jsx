@@ -8,6 +8,7 @@ import ForSchools from './components/ForSchools'
 import Testimonials from './components/Testimonials'
 import Team from './components/Team'
 import Contact from './components/Contact'
+import Trial from './components/Trial'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <ForSchools />
       <Testimonials />
       <Team />
+      <Trial />
       <Contact />
     </RootLayout>
   )
