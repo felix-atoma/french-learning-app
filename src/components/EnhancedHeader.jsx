@@ -15,6 +15,12 @@ const EnhancedHeader = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close menu when clicking on a link
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
+    setActiveDropdown(null);
+  };
+
   const programsMenu = {
     title: "Programs",
     items: [
@@ -58,7 +64,7 @@ const EnhancedHeader = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           {/* Logo Section */}
-          <Link to="/" className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-3" onClick={handleMenuClose}>
             <motion.div className="flex items-center space-x-3">
               {/* Logo Image Container */}
               <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-lg overflow-hidden bg-white">
@@ -186,9 +192,17 @@ const EnhancedHeader = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             whileTap={{ scale: 0.9 }}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            {isMenuOpen ? (
+              // Close Icon (X)
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              // Hamburger Menu Icon
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
           </motion.button>
         </div>
 
@@ -201,7 +215,21 @@ const EnhancedHeader = () => {
               exit={{ opacity: 0, height: 0 }}
               className="lg:hidden overflow-hidden bg-white mt-4 rounded-2xl shadow-xl border border-gray-200"
             >
-              <div className="py-4">
+              {/* Mobile Menu Header with Close Button */}
+              <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                <h3 className="font-bold text-[#1e3a8a]">Menu</h3>
+                <motion.button
+                  onClick={handleMenuClose}
+                  className="p-2 text-gray-500 hover:text-[#1e3a8a] transition-colors"
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </motion.button>
+              </div>
+
+              <div className="py-2">
                 {[
                   { name: "Home", href: "/" },
                   { name: "Programs", href: "/programs" },
@@ -209,23 +237,28 @@ const EnhancedHeader = () => {
                   { name: "Web Development", href: "/web-development" },
                   { name: "Blog", href: "/blog" },
                   { name: "Resources", href: "/resources" },
-                  { name: "Enroll", href: "/enroll" },
                   { name: "Contact", href: "/contact" },
                 ].map((item, index) => (
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="block py-3 px-6 text-gray-700 hover:text-[#1e3a8a] hover:bg-[#dbeafe] transition-colors font-medium"
-                    onClick={() => setIsMenuOpen(false)}
+                    className="block py-3 px-6 text-gray-700 hover:text-[#1e3a8a] hover:bg-[#dbeafe] transition-colors font-medium border-b border-gray-100 last:border-b-0"
+                    onClick={handleMenuClose}
                   >
                     {item.name}
                   </Link>
                 ))}
-                <div className="px-6 pt-4 border-t border-gray-200">
+                
+                {/* Mobile CTA Section */}
+                <div className="p-4 bg-gradient-to-r from-[#1e3a8a] to-[#3730a3] mt-2 mx-4 rounded-lg">
+                  <p className="text-white text-sm font-medium mb-3 text-center">
+                    Start Your French Journey Today!
+                  </p>
                   <motion.a
                     href="/enroll"
                     className="block w-full bg-[#f59e0b] text-[#1e3a8a] py-3 rounded-lg font-bold text-center hover:bg-[#eab308] transition-colors"
                     whileTap={{ scale: 0.95 }}
+                    onClick={handleMenuClose}
                   >
                     Enroll Now
                   </motion.a>
