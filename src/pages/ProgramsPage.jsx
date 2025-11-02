@@ -5,6 +5,7 @@ import Trial from '../components/Trial'
 import Testimonials from '../components/Testimonials'
 import AIChatbot from '../components/AIChatbot'
 import PrivacyBanner from '../components/PrivacyBanner'
+import ProblemSolution from '../components/ProblemSolution'
 
 const ProgramsPage = () => {
   return (
@@ -12,6 +13,7 @@ const ProgramsPage = () => {
       title="French Language Programs - French Learning Center GH"
       description="Explore our comprehensive French courses: Beginner, Intermediate, Advanced, and DELF preparation. Flexible schedules, certified instructors, Ghanaian context."
     >
+      <ProblemSolution />
       <Programs />
       <Trial />
       <Testimonials />

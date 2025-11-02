@@ -126,12 +126,12 @@ const Footer = () => {
                 </h4>
                 <ul className="space-y-2 text-sm">
                   {[
-                    { name: "About Us", href: "#about" },
-                    { name: "Programs", href: "#programs" },
-                    { name: "Learning App", href: "#app" },
-                    { name: "For Schools", href: "#schools" },
-                    { name: "Testimonials", href: "#testimonials" },
-                    { name: "Contact", href: "#contact" }
+                    { name: "Home", href: "/" },
+                    { name: "Programs", href: "/programs" },
+                    { name: "Resources", href: "/resources" },
+                    { name: "For Schools", href: "/schools" },
+                    { name: "Web services", href: "/web-development" },
+                    { name: "Contact", href: "/contact" }
                   ].map((link, index) => (
                     <li key={index} className="group">
                       <a 

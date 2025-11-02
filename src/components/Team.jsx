@@ -10,7 +10,7 @@ const TeamMember = ({ member, index }) => {
   return (
     <motion.div
       ref={ref}
-      className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 hover:border-educational-gold/30 transition-all duration-500 group"
+      className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 hover:border-educational-gold/30 transition-all duration-500 group relative"
       initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
       animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
       transition={{ duration: 0.8, delay: index * 0.2 }}
@@ -18,11 +18,22 @@ const TeamMember = ({ member, index }) => {
     >
       <div className="text-center mb-8">
         <motion.div 
-          className="w-40 h-40 bg-gradient-to-br from-educational-blue to-educational-navy rounded-full mx-auto mb-6 flex items-center justify-center text-white text-5xl font-bold relative overflow-hidden group-hover:from-educational-gold group-hover:to-yellow-500 transition-all duration-500"
+          className="w-40 h-40 rounded-full mx-auto mb-6 flex items-center justify-center relative overflow-hidden border-4 border-white shadow-lg group-hover:border-educational-gold transition-all duration-500"
           whileHover={{ scale: 1.1, rotate: 5 }}
           transition={{ duration: 0.3 }}
         >
-          {member.name.split(' ').map(n => n[0]).join('')}
+          {member.image ? (
+            <img 
+              src={member.image} 
+              alt={member.name}
+              className="w-full h-full object-cover rounded-full"
+            />
+          ) : (
+            // Fallback to initials if no image is provided
+            <div className="w-full h-full bg-gradient-to-br from-educational-blue to-educational-navy rounded-full flex items-center justify-center text-white text-5xl font-bold group-hover:from-educational-gold group-hover:to-yellow-500 transition-all duration-500">
+              {member.name.split(' ').map(n => n[0]).join('')}
+            </div>
+          )}
           <motion.div
             className="absolute inset-0 bg-educational-gold/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           />
@@ -159,7 +170,8 @@ const Team = () => {
         phone: "+233 59 1038 729",
         email: "frenchlearningcentergh@gmail.com"
       },
-      specialization: "Education"
+      specialization: "Education",
+      image: "/michael.jpg" // Add your image path here
     },
     {
       name: "Felix Atoma",
@@ -177,7 +189,8 @@ const Team = () => {
         phone: "+233 24 417 3068",
         email: "felixatoma2@gmail.com"
       },
-      specialization: "Technology"
+      specialization: "Technology",
+      image: "/felix.jpg" // Add your image path here
     }
   ]
 
