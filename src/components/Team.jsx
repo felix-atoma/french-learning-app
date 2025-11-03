@@ -156,21 +156,21 @@ const Team = () => {
   const teamMembers = [
     {
       name: "Michael Djan",
-      role: "French Education Specialist & Innovator",
-      qualifications: "Trained French Teacher | University of Education, Winneba | French Linguistics Specialist",
+      role: "French Education Specialist & Innovator | Helping Ghanaian Executives Win Deals in Francophone Markets | Business French Training",
+      qualifications: "Trained French Teacher | University of Education, Winneba | French Linguistics Specialist | Business French Consultant",
       expertise: [
+        "Business French for Corporate Executives & Professionals",
+        "Francophone Market Entry Strategy & Negotiation",
         "Curriculum Development & GES Syllabus Alignment",
-        "French Language Pedagogy for Ghanaian Students",
-        "Business French for Corporate Executives",
-        "Online & Home French Tutoring Programs",
-        "French Language Assessment Design",
-        "Teacher Training & Professional Development"
+        "French Language Pedagogy for Ghanaian Professionals",
+        "Cross-Cultural Business Communication",
+        "Executive French Training & Coaching"
       ],
       contact: {
         phone: "+233 59 1038 729",
         email: "frenchlearningcentergh@gmail.com"
       },
-      specialization: "Education",
+      specialization: "Business French",
       image: "/michael.jpg" // Add your image path here
     },
     {
@@ -225,7 +225,7 @@ const Team = () => {
             Passionate Educators & Innovators
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Our team combines decades of French teaching experience with cutting-edge technology expertise to create the most effective French learning solution for Ghanaian students.
+            Our team combines decades of French teaching experience with cutting-edge technology expertise to create the most effective French learning solution for Ghanaian students and professionals.
           </p>
         </motion.div>
 
@@ -246,8 +246,8 @@ const Team = () => {
             Our Mission & Vision
           </h3>
           <p className="text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto">
-            To revolutionize French education in Ghana by creating confident French speakers who excel not only in examinations but also in real-world conversations, 
-            thereby opening doors to international opportunities and cross-cultural understanding.
+            To revolutionize French education in Ghana by creating confident French speakers who excel not only in examinations but also in business negotiations and professional settings, 
+            thereby opening doors to international opportunities and cross-cultural business success in Francophone markets.
           </p>
           
           <motion.div
@@ -257,10 +257,12 @@ const Team = () => {
             transition={{ duration: 0.6, delay: 0.6 }}
           >
             {[
-              "🎯 Exam Excellence",
-              "🗣️ Conversational Fluency",
-              "🌍 Cultural Understanding",
-              "🚀 Future Opportunities"
+              "🎯 Business French Excellence",
+              "🤝 Francophone Market Success",
+              "🌍 Cross-Cultural Understanding",
+              "🚀 Executive Training",
+              "💼 Deal Negotiation",
+              "📈 Professional Growth"
             ].map((item, index) => (
               <span key={index} className="bg-educational-lightBlue text-educational-navy px-4 py-2 rounded-full font-semibold">
                 {item}

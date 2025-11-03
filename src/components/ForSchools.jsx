@@ -1,11 +1,52 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 const ForSchools = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, threshold: 0.2 });
+  const [currentImage, setCurrentImage] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  // School-focused hero images
+  const schoolImages = [
+    {
+      id: 1,
+      title: "Interactive Classroom Learning",
+      description: "Students engaging with our French learning platform in a school computer lab",
+      placeholder: "🏫",
+      color: "from-blue-500/20 to-purple-600/20"
+    },
+    {
+      id: 2,
+      title: "Teacher Dashboard",
+      description: "Real-time monitoring of student progress and performance analytics",
+      placeholder: "📊",
+      color: "from-green-500/20 to-yellow-500/20"
+    },
+    {
+      id: 3,
+      title: "Exam Preparation",
+      description: "Specialized BECE and WASSCE French exam practice sessions",
+      placeholder: "🎯",
+      color: "from-red-500/20 to-pink-600/20"
+    },
+    {
+      id: 4,
+      title: "Cultural Immersion",
+      description: "Students experiencing French culture through interactive lessons",
+      placeholder: "🌍",
+      color: "from-purple-500/20 to-indigo-600/20"
+    },
+    {
+      id: 5,
+      title: "Progress Tracking",
+      description: "Comprehensive reporting for teachers and school administrators",
+      placeholder: "📈",
+      color: "from-orange-500/20 to-red-500/20"
+    }
+  ];
 
   const benefits = [
     {
@@ -66,14 +107,148 @@ const ForSchools = () => {
     }
   ];
 
+  // Auto-advance images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % schoolImages.length);
+      setProgress(0);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [schoolImages.length]);
+
+  // Progress animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setProgress(100);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [currentImage]);
+
+  const goToImage = (index) => {
+    setCurrentImage(index);
+    setProgress(0);
+  };
+
+  const imageVariants = {
+    enter: { opacity: 0, scale: 1.1 },
+    center: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.9 }
+  };
+
   return (
     <section id="schools" ref={sectionRef} className="py-20 bg-gradient-to-br from-[#fef3c7] to-white">
       <div className="container mx-auto px-4">
+        {/* Hero Carousel Section */}
+        <motion.div
+          className="mb-16 rounded-3xl overflow-hidden shadow-2xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="relative h-64 md:h-80 lg:h-96 bg-gradient-to-br from-[#1e3a8a] to-[#3730a3]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentImage}
+                variants={imageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  opacity: { duration: 0.5 },
+                  scale: { duration: 0.5 }
+                }}
+                className={`absolute inset-0 w-full h-full bg-gradient-to-br ${schoolImages[currentImage].color} flex items-center justify-center p-8`}
+              >
+                <div className="text-center text-white max-w-4xl">
+                  <div className="text-6xl md:text-7xl mb-4">
+                    {schoolImages[currentImage].placeholder}
+                  </div>
+                  <h2 className="text-2xl md:text-4xl font-bold mb-4">
+                    {schoolImages[currentImage].title}
+                  </h2>
+                  <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
+                    {schoolImages[currentImage].description}
+                  </p>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Progress Indicator */}
+            <div className="absolute top-6 right-6 bg-black/50 backdrop-blur-sm rounded-full p-3">
+              <div className="relative w-12 h-12">
+                <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                  <circle
+                    cx="18"
+                    cy="18"
+                    r="16"
+                    fill="none"
+                    stroke="#374151"
+                    strokeWidth="2"
+                  />
+                  <motion.circle
+                    cx="18"
+                    cy="18"
+                    r="16"
+                    fill="none"
+                    stroke="#FBBF24"
+                    strokeWidth="2"
+                    strokeDasharray="100"
+                    strokeDashoffset={100 - progress}
+                    initial={{ strokeDashoffset: 100 }}
+                    animate={{ strokeDashoffset: 100 - progress }}
+                    transition={{ duration: 4.9, ease: "linear" }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                  {currentImage + 1}/{schoolImages.length}
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation Dots */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
+              {schoolImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToImage(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentImage
+                      ? 'bg-[#f59e0b] scale-125'
+                      : 'bg-white/50 hover:bg-white/70'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={() => goToImage((currentImage - 1 + schoolImages.length) % schoolImages.length)}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/70 transition-all duration-300"
+            >
+              ‹
+            </button>
+            <button
+              onClick={() => goToImage((currentImage + 1) % schoolImages.length)}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/70 transition-all duration-300"
+            >
+              ›
+            </button>
+
+            {/* School Badge */}
+            <div className="absolute top-6 left-6 bg-[#f59e0b] text-[#1e3a8a] px-4 py-2 rounded-full font-bold text-sm">
+              🏫 For Schools & Institutions
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Main Content */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-[#1e3a8a] mb-6">
             For Schools & Institutions
@@ -87,7 +262,7 @@ const ForSchools = () => {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
             <h3 className="text-3xl font-bold text-[#1e3a8a] mb-6">Why Partner With Us?</h3>
             <p className="text-lg text-gray-600 mb-6">
@@ -99,10 +274,10 @@ const ForSchools = () => {
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={benefit.title}
-                  className="flex items-start space-x-4 bg-white p-4 rounded-xl shadow-sm"
+                  className="flex items-start space-x-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100"
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                  transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                  transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                 >
                   <div className="text-3xl flex-shrink-0">{benefit.icon}</div>
                   <div>
@@ -117,7 +292,7 @@ const ForSchools = () => {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
           >
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#dbeafe]">
               <h3 className="text-2xl font-bold text-[#1e3a8a] mb-6 text-center">Partnership Benefits</h3>
@@ -151,7 +326,7 @@ const ForSchools = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
         >
           <h3 className="text-3xl font-bold text-[#1e3a8a] text-center mb-12">Partnership Packages</h3>
           <div className="grid md:grid-cols-3 gap-8">
@@ -163,7 +338,7 @@ const ForSchools = () => {
                 }`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                transition={{ duration: 0.6, delay: 1 + index * 0.1 }}
                 whileHover={{ y: -5 }}
               >
                 {tier.popular && (
@@ -204,7 +379,7 @@ const ForSchools = () => {
           className="text-center mt-16 bg-[#1e3a8a] rounded-2xl p-8 text-white"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-          transition={{ duration: 0.6, delay: 1 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
         >
           <h3 className="text-2xl md:text-3xl font-bold mb-4">Ready to Transform Your French Program?</h3>
           <p className="text-xl text-[#dbeafe] mb-6">Schedule a demo with our school partnership team.</p>

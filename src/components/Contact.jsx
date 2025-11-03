@@ -106,11 +106,28 @@ const Contact = () => {
     }
   ]
 
+  // Hero images - you can replace these with your actual image URLs
+  const heroImages = [
+    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2022&q=80",
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  ]
+
   // Success message component
   if (isSubmitted) {
     return (
       <section id="contact" ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
-        <div className="container mx-auto px-4">
+        {/* Background Hero Image */}
+        <div 
+          className="absolute inset-0 z-0 opacity-10"
+          style={{
+            backgroundImage: `url(${heroImages[0]})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        ></div>
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="text-center max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
@@ -147,7 +164,19 @@ const Contact = () => {
 
   return (
     <section id="contact" ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-4">
+      {/* Background Hero Image with Gradient Overlay */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95)), url(${heroImages[1]})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      ></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
@@ -192,7 +221,7 @@ const Contact = () => {
                 <motion.a
                   key={index}
                   href={method.action}
-                  className="flex items-start space-x-4 p-6 bg-[#dbeafe] rounded-2xl hover:bg-[#1e40af] hover:text-white transition-all duration-300 group cursor-pointer"
+                  className="flex items-start space-x-4 p-6 bg-white/80 backdrop-blur-sm rounded-2xl hover:bg-[#1e40af] hover:text-white transition-all duration-300 group cursor-pointer border border-gray-200/50 shadow-lg"
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
@@ -214,28 +243,41 @@ const Contact = () => {
               ))}
             </div>
 
-            {/* Quick Facts */}
+            {/* Quick Facts with Hero Image Background */}
             <motion.div
-              className="bg-[#1e3a8a] text-white rounded-2xl p-6"
+              className="rounded-2xl p-6 text-white relative overflow-hidden"
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.6, delay: 0.7 }}
             >
-              <h4 className="text-xl font-bold mb-4 text-[#f59e0b]">
-                Why Schools Choose Us
-              </h4>
-              <div className="space-y-3">
-                {[
-                  "✅ 100% GES Syllabus Alignment",
-                  "✅ Ghanaian Cultural Context",
-                  "✅ Teacher-Friendly Platform",
-                  "✅ Proven Student Results",
-                  "✅ Ongoing Support & Updates"
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <span>{item}</span>
-                  </div>
-                ))}
+              {/* Background Image for Quick Facts */}
+              <div 
+                className="absolute inset-0 z-0"
+                style={{
+                  backgroundImage: `url(${heroImages[2]})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: 'brightness(0.4)'
+                }}
+              ></div>
+              <div className="absolute inset-0 bg-[#1e3a8a] opacity-80 z-1"></div>
+              <div className="relative z-10">
+                <h4 className="text-xl font-bold mb-4 text-[#f59e0b]">
+                  Why Schools Choose Us
+                </h4>
+                <div className="space-y-3">
+                  {[
+                    "✅ 100% GES Syllabus Alignment",
+                    "✅ Ghanaian Cultural Context",
+                    "✅ Teacher-Friendly Platform",
+                    "✅ Proven Student Results",
+                    "✅ Ongoing Support & Updates"
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -245,7 +287,7 @@ const Contact = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="bg-[#dbeafe] rounded-3xl p-8 shadow-xl border border-[#1e40af]/20"
+            className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-[#1e40af]/20"
           >
             <h3 className="text-3xl font-bold text-[#1e3a8a] mb-6">
               Request Free Trial
@@ -411,37 +453,50 @@ const Contact = () => {
           </motion.div>
         </div>
 
-        {/* Final CTA */}
+        {/* Final CTA with Hero Image Background */}
         <motion.div
-          className="text-center mt-16 bg-gradient-to-r from-[#1e40af] to-[#1e3a8a] rounded-3xl p-8 md:p-12 text-white"
+          className="text-center mt-16 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h3 className="text-3xl md:text-4xl font-bold mb-4">
-            Don't Let Your Students Miss Out
-          </h3>
-          <p className="text-xl text-[#dbeafe] mb-8 max-w-2xl mx-auto">
-            The gap between exam success and real conversational fluency is real. 
-            Start bridging it today with our customized French Learning App.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <motion.button
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-[#f59e0b] text-[#1e3a8a] px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#eab308] transition-colors shadow-lg"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Start Free Trial
-            </motion.button>
-            <motion.a
-              href="tel:+233591038729"
-              className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-[#1e40af] transition-colors"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Call Now: 059 1038 729
-            </motion.a>
+          {/* Background Image for CTA */}
+          <div 
+            className="absolute inset-0 z-0"
+            style={{
+              backgroundImage: `url(${heroImages[0]})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'brightness(0.3)'
+            }}
+          ></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1e40af] to-[#1e3a8a] opacity-90 z-1"></div>
+          <div className="relative z-10">
+            <h3 className="text-3xl md:text-4xl font-bold mb-4">
+              Don't Let Your Students Miss Out
+            </h3>
+            <p className="text-xl text-[#dbeafe] mb-8 max-w-2xl mx-auto">
+              The gap between exam success and real conversational fluency is real. 
+              Start bridging it today with our customized French Learning App.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+              <motion.button
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-[#f59e0b] text-[#1e3a8a] px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#eab308] transition-colors shadow-lg"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Start Free Trial
+              </motion.button>
+              <motion.a
+                href="tel:+233591038729"
+                className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-[#1e40af] transition-colors"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Call Now: 059 1038 729
+              </motion.a>
+            </div>
           </div>
         </motion.div>
       </div>
