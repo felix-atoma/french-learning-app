@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+// src/components/Contact.js
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
+import config from '../config/app';
+import { contactService } from '../services/contactService';
+import { validateEmail, validatePhone, capitalizeWords } from '../utils/helpers';
+import LoadingSpinner from './LoadingSpinner';
 
 const Contact = () => {
-  const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, threshold: 0.2 })
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, threshold: 0.2 });
   const [formData, setFormData] = useState({
     name: '',
     school: '',
@@ -14,114 +19,142 @@ const Contact = () => {
     phone: '',
     students: '',
     message: ''
-  })
-  const [errors, setErrors] = useState({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-
-  const validateForm = () => {
-    const newErrors = {}
-    
-    if (!formData.name.trim()) newErrors.name = 'Name is required'
-    if (!formData.school.trim()) newErrors.school = 'School name is required'
-    if (!formData.position) newErrors.position = 'Please select your position'
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required'
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid'
-    }
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required'
-    } else if (!/^\+?[\d\s-()]+$/.test(formData.phone)) {
-      newErrors.phone = 'Please enter a valid phone number'
-    }
-    
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value
-    })
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: ''
-      })
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    
-    if (!validateForm()) return
-    
-    setIsSubmitting(true)
-    
-    // Simulate form submission
-    setTimeout(() => {
-      console.log('Form submitted:', formData)
-      setIsSubmitting(false)
-      setIsSubmitted(true)
-      
-      // Reset form after successful submission
-      setFormData({
-        name: '',
-        school: '',
-        position: '',
-        email: '',
-        phone: '',
-        students: '',
-        message: ''
-      })
-    }, 2000)
-  }
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const contactMethods = [
     {
       icon: "📧",
       title: "Email Us",
-      details: "frenchlearningcentergh@gmail.com",
-      action: "mailto:frenchlearningcentergh@gmail.com",
+      details: config.COMPANY.EMAIL,
+      action: `mailto:${config.COMPANY.EMAIL}`,
       description: "Send us detailed inquiries and we'll respond within 24 hours"
     },
     {
       icon: "📞",
       title: "Call Us",
-      details: "+233 59 1038 729 | +233 24 417 3068",
-      action: "tel:+233591038729",
+      details: config.COMPANY.PHONE,
+      action: `tel:${config.COMPANY.WHATSAPP}`,
       description: "Available Monday to Friday, 8:00 AM - 6:00 PM"
     },
     {
       icon: "💬",
       title: "WhatsApp",
       details: "Chat with our team",
-      action: "https://wa.me/233591038729",
+      action: `https://wa.me/${config.COMPANY.WHATSAPP}`,
       description: "Quick responses for immediate questions and demo requests"
     }
-  ]
+  ];
 
-  // Hero images - you can replace these with your actual image URLs
-  const heroImages = [
-    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2022&q=80",
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-  ]
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters long';
+    }
+    
+    // School validation
+    if (!formData.school.trim()) {
+      newErrors.school = 'School name is required';
+    } else if (formData.school.trim().length < 2) {
+      newErrors.school = 'School name must be at least 2 characters long';
+    }
+    
+    // Position validation
+    if (!formData.position) {
+      newErrors.position = 'Please select your position';
+    }
+    
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    // Phone validation
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!validatePhone(formData.phone)) {
+      newErrors.phone = 'Please enter a valid phone number';
+    }
+    
+    // Students validation (optional)
+    if (formData.students && formData.students < 0) {
+      newErrors.students = 'Number of students cannot be negative';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    // Convert students to number if it's the students field
+    const processedValue = name === 'students' ? (value === '' ? '' : parseInt(value) || 0) : value;
+    
+    setFormData({
+      ...formData,
+      [name]: processedValue
+    });
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: ''
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const result = await contactService.submitContactForm(formData);
+
+      if (result.success) {
+        setIsSubmitted(true);
+        // Reset form
+        setFormData({
+          name: '',
+          school: '',
+          position: '',
+          email: '',
+          phone: '',
+          students: '',
+          message: ''
+        });
+        setErrors({});
+      } else {
+        throw new Error(result.error || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      alert('Failed to submit form. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Success message component
   if (isSubmitted) {
     return (
       <section id="contact" ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
-        {/* Background Hero Image */}
         <div 
           className="absolute inset-0 z-0 opacity-10"
           style={{
-            backgroundImage: `url(${heroImages[0]})`,
+            backgroundImage: `url(${config.HERO_IMAGES[0]})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
@@ -140,7 +173,7 @@ const Contact = () => {
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <span className="text-2xl">✓</span>
+              <span className="text-2xl text-white">✓</span>
             </motion.div>
             <h2 className="text-4xl md:text-5xl font-bold text-[#1e3a8a] mb-6">
               Thank You!
@@ -159,7 +192,7 @@ const Contact = () => {
           </motion.div>
         </div>
       </section>
-    )
+    );
   }
 
   return (
@@ -168,7 +201,7 @@ const Contact = () => {
       <div 
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95)), url(${heroImages[1]})`,
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95)), url(${config.HERO_IMAGES[1]})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -254,7 +287,7 @@ const Contact = () => {
               <div 
                 className="absolute inset-0 z-0"
                 style={{
-                  backgroundImage: `url(${heroImages[2]})`,
+                  backgroundImage: `url(${config.HERO_IMAGES[2]})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   filter: 'brightness(0.4)'
@@ -308,7 +341,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:border-transparent transition-all duration-300 ${
-                      errors.name ? 'border-red-500' : 'border-gray-300'
+                      errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
                     }`}
                     required
                     placeholder="Enter your full name"
@@ -326,7 +359,7 @@ const Contact = () => {
                     value={formData.school}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:border-transparent transition-all duration-300 ${
-                      errors.school ? 'border-red-500' : 'border-gray-300'
+                      errors.school ? 'border-red-500 bg-red-50' : 'border-gray-300'
                     }`}
                     required
                     placeholder="Your school name"
@@ -345,17 +378,16 @@ const Contact = () => {
                     value={formData.position}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:border-transparent transition-all duration-300 ${
-                      errors.position ? 'border-red-500' : 'border-gray-300'
+                      errors.position ? 'border-red-500 bg-red-50' : 'border-gray-300'
                     }`}
                     required
                   >
                     <option value="">Select your position</option>
-                    <option value="Headteacher">Headteacher</option>
-                    <option value="French Teacher">French Teacher</option>
-                    <option value="Curriculum Coordinator">Curriculum Coordinator</option>
-                    <option value="ICT Coordinator">ICT Coordinator</option>
-                    <option value="Administrator">Administrator</option>
-                    <option value="Other">Other</option>
+                    {config.POSITION_OPTIONS.map(position => (
+                      <option key={position} value={position}>
+                        {position}
+                      </option>
+                    ))}
                   </select>
                   {errors.position && <p className="text-red-500 text-sm mt-1">{errors.position}</p>}
                 </div>
@@ -369,10 +401,13 @@ const Contact = () => {
                     name="students"
                     value={formData.students}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:border-transparent transition-all duration-300"
+                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:border-transparent transition-all duration-300 ${
+                      errors.students ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
                     placeholder="Approximate number"
                     min="0"
                   />
+                  {errors.students && <p className="text-red-500 text-sm mt-1">{errors.students}</p>}
                 </div>
               </div>
 
@@ -387,7 +422,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:border-transparent transition-all duration-300 ${
-                      errors.email ? 'border-red-500' : 'border-gray-300'
+                      errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
                     }`}
                     required
                     placeholder="your.email@school.edu.gh"
@@ -405,7 +440,7 @@ const Contact = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:border-transparent transition-all duration-300 ${
-                      errors.phone ? 'border-red-500' : 'border-gray-300'
+                      errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-300'
                     }`}
                     required
                     placeholder="+233 XX XXX XXXX"
@@ -437,8 +472,8 @@ const Contact = () => {
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Processing...
+                    <LoadingSpinner size="small" color="white" text="" />
+                    <span className="ml-2">Processing...</span>
                   </>
                 ) : (
                   '🚀 Request Free 1-Month Trial'
@@ -464,7 +499,7 @@ const Contact = () => {
           <div 
             className="absolute inset-0 z-0"
             style={{
-              backgroundImage: `url(${heroImages[0]})`,
+              backgroundImage: `url(${config.HERO_IMAGES[0]})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               filter: 'brightness(0.3)'
@@ -489,19 +524,19 @@ const Contact = () => {
                 Start Free Trial
               </motion.button>
               <motion.a
-                href="tel:+233591038729"
+                href={`tel:${config.COMPANY.WHATSAPP}`}
                 className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-[#1e40af] transition-colors"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Call Now: 059 1038 729
+                Call Now: {config.COMPANY.PHONE.split('|')[0].trim()}
               </motion.a>
             </div>
           </div>
         </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

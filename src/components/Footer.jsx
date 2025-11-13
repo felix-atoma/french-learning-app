@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -131,16 +132,30 @@ const Footer = () => {
                     { name: "Resources", href: "/resources" },
                     { name: "For Schools", href: "/schools" },
                     { name: "Web services", href: "/web-development" },
-                    { name: "Contact", href: "/contact" }
+                    { name: "Contact", href: "/contact" },
+                    { name: "Admin Login", href: "/admin/login", isAdmin: true }
                   ].map((link, index) => (
                     <li key={index} className="group">
-                      <a 
-                        href={link.href} 
-                        className="text-[#dbeafe] hover:text-[#f59e0b] transition-all duration-200 flex items-center text-xs"
-                      >
-                        <span className="w-1 h-1 bg-[#f59e0b] rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform duration-300"></span>
-                        {link.name}
-                      </a>
+                      {link.isAdmin ? (
+                        <Link 
+                          to={link.href} 
+                          className="text-[#dbeafe] hover:text-[#f59e0b] transition-all duration-200 flex items-center text-xs group"
+                        >
+                          <span className="w-1 h-1 bg-[#f59e0b] rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform duration-300"></span>
+                          <span className="flex items-center">
+                            {link.name}
+                            <span className="ml-1 text-[10px] bg-[#f59e0b] text-[#1e3a8a] px-1 py-0.5 rounded border border-white/30">Admin</span>
+                          </span>
+                        </Link>
+                      ) : (
+                        <a 
+                          href={link.href} 
+                          className="text-[#dbeafe] hover:text-[#f59e0b] transition-all duration-200 flex items-center text-xs"
+                        >
+                          <span className="w-1 h-1 bg-[#f59e0b] rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform duration-300"></span>
+                          {link.name}
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -187,6 +202,18 @@ const Footer = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Admin Access Note - Only visible on larger screens */}
+                <div className="mt-3 p-2 bg-[#1e40af]/50 rounded border border-[#374151] hidden md:block">
+                  <div className="flex items-center space-x-2 text-xs">
+                    <div className="w-4 h-4 bg-[#f59e0b] rounded flex items-center justify-center text-[10px] text-[#1e3a8a] font-bold">
+                      ⚙️
+                    </div>
+                    <span className="text-[#dbeafe] text-xs">
+                      Staff access available
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -214,6 +241,16 @@ const Footer = () => {
                     {Array.from({ length: 3 }).map((_, i) => (
                       <div key={i} className="w-0.5 h-0.5 bg-[#f59e0b] rounded-full"></div>
                     ))}
+                  </div>
+                  {/* Mobile Admin Link - Only visible on small screens */}
+                  <div className="md:hidden ml-3">
+                    <Link 
+                      to="/admin/login" 
+                      className="text-[#f59e0b] hover:text-[#eab308] text-xs flex items-center"
+                    >
+                      <span className="mr-1">Admin</span>
+                      <span className="text-[10px] bg-[#f59e0b] text-[#1e3a8a] px-1 py-0.5 rounded border border-white/30">Staff</span>
+                    </Link>
                   </div>
                 </div>
                 
